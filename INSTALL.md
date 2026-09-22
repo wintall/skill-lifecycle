@@ -14,6 +14,57 @@ python --version
 
 ---
 
+## 场景零：QwenPaw（阿里 AgentScope 开源的个人智能体工作台）
+
+QwenPaw 原生支持 Skills、MCP 和 Cron，是本项目的理想运行环境之一。
+
+### 1. 放到技能池
+
+技能池默认在 `%USERPROFILE%\.qwenpaw\skill_pool\`（每个技能一个目录，含 `SKILL.md`）。
+
+```powershell
+git clone https://github.com/wintall/skill-lifecycle.git
+Copy-Item -Recurse -Force .\skill-lifecycle\* `
+  -Destination "$env:USERPROFILE\.qwenpaw\skill_pool\skill-lifecycle"
+```
+
+> 也可以直接用 QwenPaw 自带的 `make-skill` / `materialize_skill` 走正规流程，
+> 它会跑 Skill Scanner 并自动登记到 `skill_pool/skill.json` 清单。
+
+### 2. 重启并验证
+
+重启 QwenPaw（Console / TUI / 桌面端），然后对它说：
+
+> 用 skill-lifecycle 看看我技能池里哪些技能需要维护
+
+脚本用 QwenPaw 自带的 Python（3.11+）即可运行，无需额外装包：
+
+```powershell
+& "C:\Program Files\Python312\python.exe" `
+  "$env:USERPROFILE\.qwenpaw\skill_pool\skill-lifecycle\scripts\skill_cli.py" self-check
+```
+
+### 3. 用 Cron 做定时巡检（QwenPaw 独有优势）
+
+因为 Agent 协议（含 MCP）都是拉取式的，服务端无法主动打断 Agent。
+QwenPaw 的 Cron 正好补上这个缺口——定时体检，结果经频道推送给你：
+
+> 每周一早上 9 点，用 skill-lifecycle 给技能池里所有技能跑一次 health，
+> 把健康分低于 80 的、以及有未修复缺陷的列出来发给我
+
+### 4. 注意事项
+
+- **触发重叠**：技能池里通常已有 `skill-creator`、`make-skill`，它们与本技能都能响应
+  「做个技能」。分工见 `SKILL.md` 的「与同类技能的分工」一节；若仍抢触发，
+  可把本技能的 `description` 收窄，只保留「评估 / 修复 / 进化 / 健康度」相关表述。
+- **Skill Scanner**：QwenPaw 会在技能激活前扫描提示词注入、硬编码密钥等风险。
+  本项目只读写技能目录内的 Markdown / JSON，若被标 warn，可在 `skill_scanner_blocked.json`
+  或控制台里加入白名单。
+- **技能资产路径**：建议直接让本技能管理 `skill_pool` 下的技能，工作区（`.skill-lifecycle/`）
+  会建在技能池同级目录，QwenPaw 的其他 Agent 也能读到同一份进化记忆。
+
+---
+
 ## 场景一：支持 Skills 规范的 Agent（推荐）
 
 适用：Claude Code、CodeBuddy、Cowork、Microsoft Agent Framework 等。

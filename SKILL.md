@@ -12,6 +12,10 @@ description: >
   即使用户没有明确说「技能」二字，只要是在处理「可复用的工作流程」或抱怨某个技能不灵，
   也应触发本技能。
 compatibility: 需要 Python 3.8+（仅用标准库）；需要文件系统读写权限以保存进化记忆与评估结果
+metadata:
+  qwenpaw:
+    emoji: "🧬"
+    requires: {}
 ---
 
 # Skill Lifecycle — 技能全生命周期管家
@@ -155,6 +159,21 @@ python scripts/skill_cli.py benchmark --iteration-dir <...>/iteration-1
 python scripts/skill_cli.py package <skill-path>
 python scripts/skill_cli.py self-check                     # 自举检查
 ```
+
+## 与同类技能的分工
+
+你的技能库里可能同时存在 `skill-creator`、`make-skill` 这类「造技能」的技能。
+按下面的边界分工，避免抢触发、重复造轮子：
+
+| 意图 | 用谁 |
+|---|---|
+| 从零起草一个技能、改写 SKILL.md 正文 | `skill-creator` / `make-skill` |
+| 评估技能好不好用、跑基线对比、看健康分 | **本技能**（EVALUATE） |
+| 技能用着用着变笨了、要修 | **本技能**（FIX） |
+| 从对话里沉淀一个新流程 | 先用 `make-skill` 出草稿，再用本技能做评估与回归验证（CAPTURED） |
+| 查某个技能的历史、已知缺陷、进化记录 | **本技能**（进化记忆） |
+
+一句话：**它们负责「造」，本技能负责「测、修、养、记」。**
 
 ## 自举
 

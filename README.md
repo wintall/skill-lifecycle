@@ -66,6 +66,7 @@ python scripts/skill_cli.py health ./my-skills/my-helper
 
 | 环境 | 做法 |
 |---|---|
+| **QwenPaw**（阿里 AgentScope） | 拷到 `~/.qwenpaw/skill_pool/skill-lifecycle/`，支持 Cron 定时巡检 |
 | Claude Code / CodeBuddy 等支持 Skills 的 Agent | 把本目录拷到技能目录（如 `~/.claude/skills/skill-lifecycle/`）即可自动触发 |
 | Claude.ai 网页 / App | `python scripts/skill_cli.py package .` 生成 `.skill` 后上传 |
 | 其他编程 Agent（Cursor / Cline 等） | 把 `SKILL.md` 内容放进它的规则文件，脚本照常调用 |

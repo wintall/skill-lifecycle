@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.1.1（2026-09-22）
+
+### 新增
+
+- 支持 QwenPaw（阿里 AgentScope）：`SKILL.md` 增加 `metadata.qwenpaw` 声明，
+  `INSTALL.md` 新增「场景零：QwenPaw」章节，含技能池路径、验证方式与 Cron 定时巡检用法
+- `SKILL.md` 新增「与同类技能的分工」，明确与 `skill-creator` / `make-skill` 的边界，
+  避免在同一技能库里抢触发
+
 ## v0.1.0（2026-09-22）
 
 首个可用版本，完成「创建 → 评估 → 进化」闭环。
